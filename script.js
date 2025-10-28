@@ -4,7 +4,6 @@ const search = document.getElementById('searchInput');
 const pdfViewer = document.getElementById('pdfViewer');
 const pdfFrame = document.getElementById('pdfFrame');
 const closeViewer = document.getElementById('closeViewer');
-const themeToggle = document.getElementById('themeToggle');
 
 // Завантаження списку книг
 fetch('books.json')
