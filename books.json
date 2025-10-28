@@ -1,0 +1,14 @@
+[
+  {
+    "title": "П.І. Чайковський, Лунная соната",
+    "file": "pdf/chai_lunson.pdf",
+    "keywords": ["чайковський", "сона", "лунная"],
+    "cover": "assets/default_cover.png"
+  },
+  {
+    "title": "В.А. Моцарт, Реквієм",
+    "file": "pdf/mozart_requiem.pdf",
+    "keywords": ["моцарт", "реквієм"],
+    "cover": "assets/default_cover.png"
+  }
+]
