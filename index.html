@@ -11,30 +11,56 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.475.0/dist/umd/lucide.min.js"></script>
+  <link rel="icon" href="assets/default_cover.png">
+
+  <!-- Початкові стилі -->
+  <style>
+    body {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+  </style>
   <script src="script.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-  <!-- 🔹 Верхній заголовок -->
-  <header class="flex items-center justify-between p-4 border-b border-gray-300 dark:border-gray-700">
-    <h1 class="text-xl font-semibold">📚 Бібліотека Хормейстера</h1>
-    <div class="flex gap-3 items-center">
-      <input id="search" type="text" placeholder="Пошук..." class="px-3 py-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
-      <button id="themeToggle" class="p-2 rounded-lg border border-gray-300 dark:border-gray-700">
-        <i data-lucide="moon"></i>
-      </button>
-    </div>
+<body class="bg-gray-50 text-gray-900">
+
+  <!-- 🔹 Шапка -->
+  <header class="p-4 bg-white dark:bg-gray-800 shadow flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">Бібліотека Хормейстера</h1>
+    <button id="themeToggle"
+            class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-lg">
+      🌙
+    </button>
   </header>
 
-  <!-- 🔹 Контейнер книг -->
-  <main class="p-4">
-    <div id="booksContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+  <!-- 🔹 Поле пошуку -->
+  <div class="p-4">
+    <input id="searchInput"
+           type="text"
+           placeholder="Пошук за автором чи назвою..."
+           class="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+  </div>
+
+  <!-- 🔹 Список книг -->
+  <main id="bookList"
+        class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
   </main>
 
+  <!-- 🔹 Перегляд PDF у вікні -->
+  <div id="pdfViewer"
+       class="fixed inset-0 bg-black bg-opacity-90 hidden flex-col z-50">
+    <button id="closeViewer"
+            class="text-white text-2xl p-4 self-end hover:text-red-400">✕</button>
+    <iframe id="pdfFrame"
+            class="flex-1 w-full"
+            style="height:90vh;"
+            frameborder="0">
+    </iframe>
+  </div>
+
   <!-- 🔹 Футер -->
-  <footer class="text-center py-4 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700">
-    © 2025 Бібліотека Хормейстера · horlibua
+  <footer class="p-4 text-center text-sm bg-gray-100 dark:bg-gray-800">
+    © 2025 Бібліотека Хормейстера | horlibua
   </footer>
 </body>
 </html>
