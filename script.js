@@ -1,145 +1,120 @@
+// ---------- Глобальні змінні ----------
+const container = document.getElementById("booksContainer");
+const searchInput = document.getElementById("search");
+const themeToggle = document.getElementById("themeToggle");
+const html = document.documentElement;
+
 let books = [];
-const list = document.getElementById('bookList');
-const search = document.getElementById('searchInput');
-const pdfViewer = document.getElementById('pdfViewer');
-const pdfFrame = document.getElementById('pdfFrame');
-const closeViewer = document.getElementById('closeViewer');
 
-// === Створюємо спіннер ===
-const loader = document.createElement('div');
-loader.className = 'flex flex-col items-center justify-center py-20 w-full text-gray-500 dark:text-gray-400';
-loader.innerHTML = `
-  <svg class="animate-spin h-8 w-8 mb-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-  </svg>
-  <p>Завантаження бібліотеки...</p>
-`;
-list.appendChild(loader);
-
-// === Завантаження списку книг ===
-fetch('books.json')
-  .then(res => res.json())
-  .then(data => {
-    books = data;
-    renderBooks(books);
-  })
-  .catch(err => {
-    list.innerHTML = `<p class="text-red-500">Помилка завантаження списку книг.</p>`;
-    console.error(err);
-  });
-
-// === Отримуємо кеш розмірів ===
-function getSizeCache() {
-  try {
-    return JSON.parse(localStorage.getItem('bookSizes')) || {};
-  } catch {
-    return {};
-  }
-}
-function saveSizeCache(cache) {
-  localStorage.setItem('bookSizes', JSON.stringify(cache));
+// ---------- Завантаження books.json ----------
+async function loadBooks() {
+  const res = await fetch("books.json");
+  books = await res.json();
+  renderBooks(books);
 }
 
-// === Функція для відображення карток ===
-async function renderBooks(data) {
-  list.innerHTML = '';
-  list.appendChild(loader);
+// ---------- Рендер карток ----------
+async function renderBooks(list) {
+  container.innerHTML = "";
 
-  const rendered = [];
-  const sizeCache = getSizeCache();
-  let cacheChanged = false;
+  for (const [i, book] of list.entries()) {
+    const card = document.createElement("div");
+    card.className =
+      "border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800";
 
-  for (const book of data) {
-    const card = document.createElement('div');
-    card.className = 'bg-white dark:bg-gray-800 rounded-lg shadow p-3 flex flex-col items-center transition hover:shadow-md';
-
-    // --- Отримання розміру файлу ---
-    let sizeText = '';
-    const cachedSize = sizeCache[book.file];
-
-    if (cachedSize) {
-      sizeText = cachedSize;
-    } else {
-      try {
-        const response = await fetch(book.file, { method: 'HEAD' });
-        const sizeBytes = response.headers.get('content-length');
-        if (sizeBytes) {
-          const sizeMB = (sizeBytes / (1024 * 1024)).toFixed(2) + ' МБ';
-          sizeText = sizeMB;
-          sizeCache[book.file] = sizeMB;
-          cacheChanged = true;
-        }
-      } catch {
-        sizeText = '';
-      }
-    }
+    const coverId = "cover_" + i;
+    const imgSrc = book.cover || "assets/default_cover.png";
+    const titleHTML = `<div class="p-2 text-sm font-medium text-center">${book.title}</div>`;
+    const buttonsHTML = `
+      <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700">
+        <button onclick="openPDF('${book.file}')" class="text-blue-600 dark:text-blue-400 text-sm">📖 Переглянути</button>
+        <button onclick="downloadPDF('${book.file}', '${book.title}')" class="text-green-600 dark:text-green-400 text-sm">⬇️ Завантажити</button>
+      </div>`;
 
     card.innerHTML = `
-      <img src="${book.cover}" alt="cover" class="w-24 h-32 object-cover mb-2 rounded">
-      <h3 class="text-center font-medium mb-1">${book.title}</h3>
-      ${sizeText ? `<p class="text-sm text-gray-500 mb-2">${sizeText}</p>` : ''}
-      <div class="flex gap-2">
-        <button class="px-3 py-1 bg-blue-500 text-white rounded viewBtn hover:bg-blue-600 transition">Переглянути</button>
-        <a href="${book.file}" download class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500 transition">⬇️</a>
-      </div>
+      <img id="${coverId}" src="${imgSrc}" alt="cover" class="w-full aspect-[3/4] object-cover">
+      ${titleHTML}
+      <div id="size_${i}" class="text-xs text-gray-500 text-center mb-1">...</div>
+      ${buttonsHTML}
     `;
 
-    card.querySelector('.viewBtn').addEventListener('click', () => openPDF(book.file));
-    rendered.push(card);
+    container.appendChild(card);
+
+    // 🔹 Якщо cover відсутній — створюємо превʼю з PDF
+    if (!book.cover) {
+      renderPDFPreview(book.file, coverId);
+    }
+
+    // 🔹 Визначаємо розмір PDF
+    setFileSize(book.file, `size_${i}`);
   }
-
-  // зберігаємо кеш якщо оновився
-  if (cacheChanged) saveSizeCache(sizeCache);
-
-  list.innerHTML = ''; // очистити спіннер
-  rendered.forEach(card => list.appendChild(card));
 }
 
-// === Пошук ===
-search.addEventListener('input', e => {
+// ---------- Визначення розміру файлу ----------
+async function setFileSize(url, elementId) {
+  try {
+    const response = await fetch(url, { method: "HEAD" });
+    const size = response.headers.get("content-length");
+    if (size) {
+      const mb = (parseInt(size) / (1024 * 1024)).toFixed(2);
+      document.getElementById(elementId).innerText = `${mb} МБ`;
+    } else {
+      document.getElementById(elementId).innerText = "—";
+    }
+  } catch {
+    document.getElementById(elementId).innerText = "—";
+  }
+}
+
+// ---------- Відкриття PDF ----------
+function openPDF(url) {
+  window.open(url, "_blank");
+}
+
+// ---------- Завантаження PDF ----------
+function downloadPDF(url, title) {
+  const filename = title.replace(/[^\w\s]/gi, "_") + ".pdf";
+  fileDownload(url, filename);
+}
+
+// ---------- Пошук ----------
+searchInput.addEventListener("input", (e) => {
   const q = e.target.value.toLowerCase();
-  const filtered = books.filter(b =>
-    b.title.toLowerCase().includes(q) ||
-    b.keywords.some(k => k.toLowerCase().includes(q))
-  );
+  const filtered = books.filter((b) => b.title.toLowerCase().includes(q));
   renderBooks(filtered);
 });
 
-// === Перегляд PDF ===
-function openPDF(file) {
-  pdfFrame.src = file;
-  pdfViewer.classList.remove('hidden');
-}
-closeViewer.addEventListener('click', () => {
-  pdfViewer.classList.add('hidden');
-  pdfFrame.src = '';
+// ---------- Темна/світла тема ----------
+themeToggle.addEventListener("click", () => {
+  html.classList.toggle("dark");
+  localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
 });
 
+if (localStorage.getItem("theme") === "dark") html.classList.add("dark");
 
-// === Темна / світла тема ===
-const themeToggle = document.getElementById('themeToggle');
+lucide.createIcons();
 
-// Функція перемикання
-function toggleTheme() {
-  const isDark = document.documentElement.classList.toggle('dark');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  themeToggle.textContent = isDark ? '☀️' : '🌙';
+// ---------- PDF Preview через pdf.js ----------
+async function renderPDFPreview(pdfUrl, imgId) {
+  try {
+    const loadingTask = pdfjsLib.getDocument(pdfUrl);
+    const pdf = await loadingTask.promise;
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 0.2 });
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: context, viewport }).promise;
+
+    const imgElem = document.getElementById(imgId);
+    if (imgElem) imgElem.src = canvas.toDataURL("image/png");
+  } catch (e) {
+    console.warn("⚠️ Не вдалося створити обкладинку для:", pdfUrl, e);
+  }
 }
 
-// Визначення початкової теми
-(function initTheme() {
-  const storedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-    document.documentElement.classList.add('dark');
-    themeToggle.textContent = '☀️';
-  } else {
-    document.documentElement.classList.remove('dark');
-    themeToggle.textContent = '🌙';
-  }
-})();
-
-// Обробник кліку
-themeToggle.addEventListener('click', toggleTheme);
+// ---------- Старт ----------
+loadBooks();
