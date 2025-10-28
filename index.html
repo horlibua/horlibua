@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Бібліотека Хормейстера</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <link rel="icon" href="assets/default_cover.png">
+</head>
+<body class="bg-gray-50 text-gray-900 transition-colors duration-500 dark:bg-gray-900 dark:text-gray-100">
+
+  <!-- Шапка -->
+  <header class="p-4 bg-white dark:bg-gray-800 shadow flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">Бібліотека Хормейстера</h1>
+    <button id="themeToggle" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">🌙</button>
+  </header>
+
+  <!-- Пошук -->
+  <div class="p-4">
+    <input id="searchInput" type="text" placeholder="Пошук за автором чи назвою..."
+      class="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+  </div>
+
+  <!-- Список книг -->
+  <main id="bookList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"></main>
+
+  <!-- Перегляд PDF -->
+  <div id="pdfViewer" class="fixed inset-0 bg-black bg-opacity-90 hidden flex-col">
+    <button id="closeViewer" class="text-white text-2xl p-4 self-end">✕</button>
+    <iframe id="pdfFrame" class="flex-1 w-full" style="height:90vh;" frameborder="0"></iframe>
+  </div>
+
+  <!-- Футер -->
+  <footer class="p-4 text-center text-sm bg-gray-100 dark:bg-gray-800">
+    © 2025 Бібліотека Хормейстера | horlibua
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
