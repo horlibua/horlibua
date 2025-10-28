@@ -1,14 +1,14 @@
 [
   {
-    "title": "П.І. Чайковський, Лунная соната",
-    "file": "pdf/chai_lunson.pdf",
-    "keywords": ["чайковський", "сона", "лунная"],
+    "title": "М.Д. Леонтович, Хорові твори",
+    "file": "pdf/Leontovych_Choral_Works.pdf",
+    "keywords": ["ОЙ ПОСЕРЕД ДВОРУ", "ОЙ В ЛЬВОВІ", "КОЗА"],
     "cover": "assets/default_cover.png"
   },
   {
-    "title": "В.А. Моцарт, Реквієм",
-    "file": "pdf/mozart_requiem.pdf",
-    "keywords": ["моцарт", "реквієм"],
+    "title": " Н.А. Фоломєєва, Співацька підготовка автора-виконавця сучасної популярної музики: навчальний посібник",
+    "file": "pdf/Folomeeva_Spivatska_pidhotovka_avtora-vykonavtsia_suchasnoi_populiarnoi_muzyky.pdf",
+    "keywords": ["посібник", "підготовка"],
     "cover": "assets/default_cover.png"
   }
 ]
