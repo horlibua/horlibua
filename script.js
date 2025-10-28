@@ -141,7 +141,7 @@ function toggleTheme() {
 
 themeToggle.addEventListener('click', toggleTheme);
 
-/ ---------- PDF Preview через pdf.js ----------
+// ---------- PDF Preview через pdf.js ----------
 async function renderPDFPreview(pdfUrl, imgId) {
   try {
     const loadingTask = pdfjsLib.getDocument(pdfUrl);
