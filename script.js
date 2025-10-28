@@ -52,7 +52,29 @@ closeViewer.addEventListener('click', () => {
   pdfFrame.src = '';
 });
 
-// Темна/світла тема
-themeToggle.addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-});
+// === Темна / світла тема ===
+const themeToggle = document.getElementById('themeToggle');
+
+// Функція перемикання
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  themeToggle.textContent = isDark ? '☀️' : '🌙';
+}
+
+// Визначення початкової теми
+(function initTheme() {
+  const storedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+    document.documentElement.classList.add('dark');
+    themeToggle.textContent = '☀️';
+  } else {
+    document.documentElement.classList.remove('dark');
+    themeToggle.textContent = '🌙';
+  }
+})();
+
+// Обробник кліку
+themeToggle.addEventListener('click', toggleTheme);
