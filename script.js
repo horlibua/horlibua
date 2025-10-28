@@ -92,7 +92,6 @@ themeToggle.addEventListener("click", () => {
 
 if (localStorage.getItem("theme") === "dark") html.classList.add("dark");
 
-lucide.createIcons();
 
 // ---------- PDF Preview через pdf.js ----------
 async function renderPDFPreview(pdfUrl, imgId) {
