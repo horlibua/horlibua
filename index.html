@@ -5,65 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Бібліотека Хормейстера</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script>
     window.pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
   </script>
-  <link rel="icon" href="assets/default_cover.png">
 
-  <!-- Початкові стилі -->
+  <link rel="icon" href="assets/default_cover.png" />
   <style>
     body {
       transition: background-color 0.3s ease, color 0.3s ease;
     }
   </style>
-  
 </head>
 
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
 
-  <!-- 🔹 Шапка -->
-  <header class="p-4 bg-white dark:bg-gray-800 shadow flex justify-between items-center">
-    <h1 class="text-2xl font-semibold">Бібліотека Хормейстера</h1>
-    <button id="themeToggle"
-            class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-lg">
-      🌙
-    </button>
+  <!-- 🔹 Верхня частина -->
+  <header class="p-6 text-center bg-white dark:bg-gray-800 shadow-md">
+    <h1 class="text-3xl font-bold">📚 Бібліотека Хормейстера</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+      Музично-хорова література та навчальні матеріали
+    </p>
   </header>
 
-  <!-- 🔹 Поле пошуку -->
-  <div class="p-4">
+  <!-- 🔹 Останні книжки -->
+  <section class="p-6 bg-gray-100 dark:bg-gray-800">
+    <h2 class="text-xl font-semibold mb-3">🆕 Останні додані книжки</h2>
+    <div id="latestBooks" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4"></div>
+  </section>
+
+  <!-- 🔹 Пошук -->
+  <section class="p-6">
     <input id="search"
            type="text"
-           placeholder="Пошук за автором чи назвою..."
-           class="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700">
-  </div>
+           placeholder="🔍 Пошук за автором чи назвою..."
+           class="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700">
+  </section>
 
-  <!-- 🔹 Список книг -->
-  <main class="p-4">
+  <!-- 🔹 Основна бібліотека -->
+  <main class="p-6">
     <div id="booksContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+
+    <!-- Пагінація -->
+    <div id="pagination" class="flex justify-center mt-6 gap-2"></div>
   </main>
 
-  <!-- 🔹 Перегляд PDF у вікні -->
-  <div id="pdfViewer"
-       class="fixed inset-0 bg-black bg-opacity-90 hidden flex-col z-50">
-    <button id="closeViewer"
-            class="text-white text-2xl p-4 self-end hover:text-red-400">✕</button>
-    <iframe id="pdfFrame"
-            class="flex-1 w-full"
-            style="height:90vh;"
-            frameborder="0">
-    </iframe>
-  </div>
-
   <!-- 🔹 Футер -->
-  <footer class="p-4 text-center text-sm bg-gray-100 dark:bg-gray-800">
+  <footer class="p-6 text-center text-sm bg-gray-100 dark:bg-gray-800">
     © 2025 Бібліотека Хормейстера | horlibua
   </footer>
 
   <script src="script.js"></script>
-  
 </body>
 </html>
