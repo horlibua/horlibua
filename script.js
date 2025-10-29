@@ -1,7 +1,7 @@
 // ---------- Налаштування ----------
 const DRIVE_JSON_URL =
   "books.json"; // 🔹 завантажити файл з Google Drive
-const BOOKS_PER_PAGE = 15;
+const BOOKS_PER_PAGE = 10;
 
 // ---------- Елементи ----------
 const container = document.getElementById("booksContainer");
