@@ -31,17 +31,17 @@ async function loadBooks() {
 
 function renderBooks() {
   container.innerHTML = "";
-  const start = (currentPage - 1) * BOOKS_PER_PAGE;
-  const end = start + BOOKS_PER_PAGE;
-  const list = filteredBooks.slice(start, end).reverse();;
 
-  list.forEach((book) => {
+  // Параметри карток
+  const CARD_WIDTH = 150; // px
+
+  filteredBooks.forEach((book) => {
     const card = document.createElement("div");
     card.className =
-      "border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800 flex flex-col";
+      `flex-shrink-0 w-[${CARD_WIDTH}px] border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800 flex flex-col`;
 
     card.innerHTML = `
-      <!-- Обгортка для зображення з рамкою -->
+      <!-- Обкладинка з рамкою -->
       <div class="p-2 flex justify-center">
         <img src="${book.cover || 'assets/default_cover.png'}"
              alt="cover"
@@ -54,7 +54,7 @@ function renderBooks() {
         <div class="text-xs text-gray-500">${book.size_mb ? book.size_mb + " МБ" : ""}</div>
       </div>
 
-      <!-- Кнопки, завжди внизу -->
+      <!-- Кнопки внизу -->
       <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700 mt-auto">
         <button onclick="openPDF('${book.file}')"
                 class="text-blue-600 dark:text-blue-400 text-sm">📖 Переглянути</button>
@@ -62,6 +62,7 @@ function renderBooks() {
                 class="text-green-600 dark:text-green-400 text-sm">⬇️ Завантажити</button>
       </div>
     `;
+
     container.appendChild(card);
   });
 }
