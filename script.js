@@ -1,118 +1,125 @@
-// ---------- Глобальні змінні ----------
+// ---------- Налаштування ----------
+const DRIVE_JSON_URL =
+  "https://drive.google.com/uc?export=download&id=1sjiHh9LwW3EIbKYW1oueiAoVGgu_550e"; // 🔹 заміни на ID books.json з Google Drive
+const BOOKS_PER_PAGE = 15;
+
+// ---------- Елементи ----------
 const container = document.getElementById("booksContainer");
+const latestContainer = document.getElementById("latestBooks");
 const searchInput = document.getElementById("search");
-const themeToggle = document.getElementById("themeToggle");
-const html = document.documentElement;
+const pagination = document.getElementById("pagination");
 
 let books = [];
+let filteredBooks = [];
+let currentPage = 1;
 
 // ---------- Завантаження books.json ----------
 async function loadBooks() {
-  const res = await fetch("books.json");
-  books = await res.json();
-  renderBooks(books);
+  try {
+    const res = await fetch(DRIVE_JSON_URL);
+    books = await res.json();
+    filteredBooks = [...books];
+
+    renderLatestBooks();
+    renderBooks();
+    renderPagination();
+  } catch (err) {
+    console.error("Помилка завантаження books.json:", err);
+    container.innerHTML = `<p class="text-center text-red-500">Не вдалося завантажити бібліотеку.</p>`;
+  }
 }
 
-// ---------- Рендер карток ----------
-async function renderBooks(list) {
-  container.innerHTML = "";
+// ---------- Останні книжки ----------
+function renderLatestBooks() {
+  latestContainer.innerHTML = "";
+  const latest = books.slice(-5).reverse(); // останні 5
+  latest.forEach((book) => {
+    const card = document.createElement("div");
+    card.className =
+      "border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden shadow bg-white dark:bg-gray-800";
+    card.innerHTML = `
+      <img src="${book.cover || 'assets/default_cover.png'}"
+           alt="cover"
+           class="w-full aspect-[3/4] object-cover">
+      <div class="p-2 text-sm font-medium text-center truncate">${book.title}</div>
+    `;
+    card.onclick = () => openPDF(book.file);
+    latestContainer.appendChild(card);
+  });
+}
 
-  for (const [i, book] of list.entries()) {
+// ---------- Основний рендер ----------
+function renderBooks() {
+  container.innerHTML = "";
+  const start = (currentPage - 1) * BOOKS_PER_PAGE;
+  const end = start + BOOKS_PER_PAGE;
+  const list = filteredBooks.slice(start, end);
+
+  list.forEach((book) => {
     const card = document.createElement("div");
     card.className =
       "border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800";
-
-    const coverId = "cover_" + i;
-    const imgSrc = book.cover || "assets/default_cover.png";
-    const titleHTML = `<div class="p-2 text-sm font-medium text-center">${book.title}</div>`;
-    const buttonsHTML = `
-      <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700">
-        <button onclick="openPDF('${book.file}')" class="text-blue-600 dark:text-blue-400 text-sm">📖 Переглянути</button>
-        <button onclick="downloadPDF('${book.file}', '${book.title}')" class="text-green-600 dark:text-green-400 text-sm">⬇️ Завантажити</button>
-      </div>`;
-
     card.innerHTML = `
-      <img id="${coverId}" src="${imgSrc}" alt="cover" class="w-full aspect-[3/4] object-cover">
-      ${titleHTML}
-      <div id="size_${i}" class="text-xs text-gray-500 text-center mb-1">...</div>
-      ${buttonsHTML}
+      <img src="${book.cover || 'assets/default_cover.png'}"
+           alt="cover"
+           class="w-full aspect-[3/4] object-cover">
+      <div class="p-2 text-sm font-medium text-center">${book.title}</div>
+      <div class="text-xs text-gray-500 text-center mb-1">${book.size_mb ? book.size_mb + " МБ" : ""}</div>
+      <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700">
+        <button onclick="openPDF('${book.file}')"
+                class="text-blue-600 dark:text-blue-400 text-sm">📖 Переглянути</button>
+        <button onclick="downloadPDF('${book.file}', '${book.title}')"
+                class="text-green-600 dark:text-green-400 text-sm">⬇️ Завантажити</button>
+      </div>
     `;
-
     container.appendChild(card);
+  });
+}
 
-    // 🔹 Якщо cover відсутній — створюємо превʼю з PDF
-    if (!book.cover) {
-      renderPDFPreview(book.file, coverId);
-    }
+// ---------- Пагінація ----------
+function renderPagination() {
+  pagination.innerHTML = "";
+  const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
 
-    // 🔹 Визначаємо розмір PDF
-    setFileSize(book.file, `size_${i}`);
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    btn.className =
+      "px-3 py-1 border rounded-lg " +
+      (i === currentPage
+        ? "bg-blue-500 text-white"
+        : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300");
+    btn.onclick = () => {
+      currentPage = i;
+      renderBooks();
+      renderPagination();
+      window.scrollTo({ top: 300, behavior: "smooth" });
+    };
+    pagination.appendChild(btn);
   }
-}
-
-// ---------- Визначення розміру файлу ----------
-async function setFileSize(url, elementId) {
-  try {
-    const response = await fetch(url, { method: "HEAD" });
-    const size = response.headers.get("content-length");
-    if (size) {
-      const mb = (parseInt(size) / (1024 * 1024)).toFixed(2);
-      document.getElementById(elementId).innerText = `${mb} МБ`;
-    } else {
-      document.getElementById(elementId).innerText = "—";
-    }
-  } catch {
-    document.getElementById(elementId).innerText = "—";
-  }
-}
-
-// ---------- Відкриття PDF ----------
-function openPDF(url) {
-  window.open(url, "_blank");
-}
-
-// ---------- Завантаження PDF ----------
-function downloadPDF(url, title) {
-  const filename = title.replace(/[^\w\s]/gi, "_") + ".pdf";
-  fileDownload(url, filename);
 }
 
 // ---------- Пошук ----------
 searchInput.addEventListener("input", (e) => {
   const q = e.target.value.toLowerCase();
-  const filtered = books.filter((b) => b.title.toLowerCase().includes(q));
-  renderBooks(filtered);
+  filteredBooks = books.filter((b) => b.title.toLowerCase().includes(q));
+  currentPage = 1;
+  renderBooks();
+  renderPagination();
 });
 
-// ---------- Темна/світла тема ----------
-themeToggle.addEventListener("click", () => {
-  html.classList.toggle("dark");
-  localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
-});
-
-if (localStorage.getItem("theme") === "dark") html.classList.add("dark");
-
-
-// ---------- PDF Preview через pdf.js ----------
-async function renderPDFPreview(pdfUrl, imgId) {
-  try {
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    const pdf = await loadingTask.promise;
-    const page = await pdf.getPage(1);
-    const viewport = page.getViewport({ scale: 0.2 });
-
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({ canvasContext: context, viewport }).promise;
-
-    const imgElem = document.getElementById(imgId);
-    if (imgElem) imgElem.src = canvas.toDataURL("image/png");
-  } catch (e) {
-    console.warn("⚠️ Не вдалося створити обкладинку для:", pdfUrl, e);
-  }
+// ---------- PDF-перегляд і завантаження ----------
+function openPDF(url) {
+  window.open(url, "_blank");
+}
+function downloadPDF(url, title) {
+  const filename = title.replace(/[^\w\s]/gi, "_") + ".pdf";
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 
 // ---------- Старт ----------
