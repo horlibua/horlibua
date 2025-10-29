@@ -1,6 +1,6 @@
 // ---------- Налаштування ----------
 const DRIVE_JSON_URL =
-  "https://drive.google.com/uc?export=download&id=1sjiHh9LwW3EIbKYW1oueiAoVGgu_550e"; // 🔹 заміни на ID books.json з Google Drive
+  "books.json"; // 🔹 завантажити файл з Google Drive
 const BOOKS_PER_PAGE = 15;
 
 // ---------- Елементи ----------
