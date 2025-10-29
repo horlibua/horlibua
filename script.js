@@ -5,7 +5,6 @@ const BOOKS_PER_PAGE = 15;
 
 // ---------- Елементи ----------
 const container = document.getElementById("booksContainer");
-const latestContainer = document.getElementById("latestBooks");
 const searchInput = document.getElementById("search");
 const pagination = document.getElementById("pagination");
 
@@ -19,8 +18,6 @@ async function loadBooks() {
     const res = await fetch(DRIVE_JSON_URL);
     books = await res.json();
     filteredBooks = [...books];
-
-    renderLatestBooks();
     renderBooks();
     renderPagination();
   } catch (err) {
