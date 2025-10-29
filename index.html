@@ -17,39 +17,30 @@
 
   <!-- 🔹 Верхня частина -->
   <header class="p-6 text-center bg-white dark:bg-gray-800 shadow-md">
-    <h1 class="text-3xl font-bold">📚 Бібліотека Хормейстера</h1>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+    <h1 class="text-4xl font-bold mb-1">📚 Бібліотека Хормейстера</h1>
+    <p class="text-gray-500 dark:text-gray-400 text-lg">
       Музично-хорова література та навчальні матеріали
     </p>
   </header>
   
-  <!-- 🔹 Останні книжки -->
-  <section class="p-6 bg-gray-100 dark:bg-gray-800">
-    <h2 class="text-xl font-semibold mb-3">🆕 Останні додані книжки</h2>
-    <div id="latestBooks" class="flex gap-4 overflow-hidden"></div>
-  </section>
-
   <!-- 🔹 Пошук -->
-  <section class="p-6">
+  <section class="p-6 max-w-4xl mx-auto">
     <input id="search"
            type="text"
            placeholder="🔍 Пошук за автором чи назвою..."
-           class="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700">
+           class="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
   </section>
 
   <!-- 🔹 Основна бібліотека -->
-  <main class="p-6">
-    <div id="booksContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+  <main class="p-6 max-w-7xl mx-auto">
+    <div id="booksContainer" class="flex gap-4 overflow-hidden flex-wrap">
+      <!-- Картки будуть додаватися динамічно через JS -->
+    </div>
 
     <!-- Пагінація -->
     <div id="pagination" class="flex justify-center mt-6 gap-2"></div>
   </main>
 
-  <!-- 🔹 Футер -->
-  <footer class="p-6 text-center text-sm bg-gray-100 dark:bg-gray-800">
-    © 2025 Бібліотека Хормейстера | horlibua
-  </footer>
-  
   <!-- 🔹 Модальне вікно для перегляду PDF -->
   <div id="pdfModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <div class="bg-white dark:bg-gray-900 w-11/12 max-w-3xl h-[80vh] rounded-lg shadow-lg relative">
@@ -57,7 +48,12 @@
       <iframe id="pdfViewer" src="" class="w-full h-full rounded-lg" style="border:none;"></iframe>
     </div>
   </div>
-  
+
+  <!-- 🔹 Футер -->
+  <footer class="p-6 text-center text-sm bg-gray-100 dark:bg-gray-800">
+    © 2025 Бібліотека Хормейстера | horlibua
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
