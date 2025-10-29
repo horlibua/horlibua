@@ -48,7 +48,6 @@ function renderLatestBooks() {
   });
 }
 
-// ---------- Основний рендер ----------
 function renderBooks() {
   container.innerHTML = "";
   const start = (currentPage - 1) * BOOKS_PER_PAGE;
@@ -58,14 +57,24 @@ function renderBooks() {
   list.forEach((book) => {
     const card = document.createElement("div");
     card.className =
-      "border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800";
+      "border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800 flex flex-col";
+
     card.innerHTML = `
-      <img src="${book.cover || 'assets/default_cover.png'}"
-           alt="cover"
-           class="w-full aspect-[3/4] object-cover">
-      <div class="p-2 text-sm font-medium text-center">${book.title}</div>
-      <div class="text-xs text-gray-500 text-center mb-1">${book.size_mb ? book.size_mb + " МБ" : ""}</div>
-      <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700">
+      <!-- Обгортка для зображення з рамкою -->
+      <div class="p-2 flex justify-center">
+        <img src="${book.cover || 'assets/default_cover.png'}"
+             alt="cover"
+             class="border border-gray-300 dark:border-gray-600 w-full aspect-[3/4] object-cover rounded">
+      </div>
+
+      <!-- Текст і розмір -->
+      <div class="p-2 text-sm font-medium text-center flex-1">
+        <div class="mb-1">${book.title}</div>
+        <div class="text-xs text-gray-500">${book.size_mb ? book.size_mb + " МБ" : ""}</div>
+      </div>
+
+      <!-- Кнопки, завжди внизу -->
+      <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700 mt-auto">
         <button onclick="openPDF('${book.file}')"
                 class="text-blue-600 dark:text-blue-400 text-sm">📖 Переглянути</button>
         <button onclick="downloadPDF('${book.file}', '${book.title}')"
@@ -75,6 +84,7 @@ function renderBooks() {
     container.appendChild(card);
   });
 }
+
 
 // ---------- Пагінація ----------
 function renderPagination() {
