@@ -36,7 +36,7 @@ function renderLatestBooks() {
   latest.forEach((book) => {
     const card = document.createElement("div");
     card.className =
-      "border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800 flex flex-col";
+      "flex-shrink-0 w-[150px] border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800 flex flex-col";
 
     card.innerHTML = `
       <!-- Обгортка для зображення з рамкою -->
