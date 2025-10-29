@@ -17,7 +17,7 @@ async function loadBooks() {
   try {
     const res = await fetch(DRIVE_JSON_URL);
     books = await res.json();
-    filteredBooks = [...books];
+    filteredBooks = [...books].reverse();
     renderBooks();
     renderPagination();
   } catch (err) {
@@ -30,7 +30,7 @@ function renderBooks() {
   container.innerHTML = "";
   const start = (currentPage - 1) * BOOKS_PER_PAGE;
   const end = start + BOOKS_PER_PAGE;
-  const list = filteredBooks.slice(start, end).reverse();;
+  const list = filteredBooks.slice(start, end);
 
   list.forEach((book) => {
     const card = document.createElement("div");
