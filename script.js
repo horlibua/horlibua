@@ -29,46 +29,11 @@ async function loadBooks() {
   }
 }
 
-// ---------- Останні книжки ----------
-function renderLatestBooks() {
-  latestContainer.innerHTML = "";
-  const latest = books.slice(-5).reverse(); // останні 5
-  latest.forEach((book) => {
-    const card = document.createElement("div");
-    card.className =
-      "flex-shrink-0 w-[150px] border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow hover:shadow-lg transition relative bg-white dark:bg-gray-800 flex flex-col";
-
-    card.innerHTML = `
-      <!-- Обгортка для зображення з рамкою -->
-      <div class="p-2 flex justify-center">
-        <img src="${book.cover || 'assets/default_cover.png'}"
-             alt="cover"
-             class="border border-gray-300 dark:border-gray-600 w-full aspect-[3/4] object-cover rounded">
-      </div>
-
-      <!-- Текст і розмір -->
-      <div class="p-2 text-sm font-medium text-center flex-1">
-        <div class="mb-1">${book.title}</div>
-        <div class="text-xs text-gray-500">${book.size_mb ? book.size_mb + " МБ" : ""}</div>
-      </div>
-
-      <!-- Кнопки, завжди внизу -->
-      <div class="flex justify-around p-2 border-t border-gray-200 dark:border-gray-700 mt-auto">
-        <button onclick="openPDF('${book.file}')"
-                class="text-blue-600 dark:text-blue-400 text-sm">📖 Переглянути</button>
-        <button onclick="downloadPDF('${book.file}', '${book.title}')"
-                class="text-green-600 dark:text-green-400 text-sm">⬇️ Завантажити</button>
-      </div>
-    `;
-    latestContainer.appendChild(card);
-  });
-}
-
 function renderBooks() {
   container.innerHTML = "";
   const start = (currentPage - 1) * BOOKS_PER_PAGE;
   const end = start + BOOKS_PER_PAGE;
-  const list = filteredBooks.slice(start, end);
+  const list = filteredBooks.slice(start, end).reverse();;
 
   list.forEach((book) => {
     const card = document.createElement("div");
