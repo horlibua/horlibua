@@ -110,13 +110,27 @@ searchInput.addEventListener("input", (e) => {
 
 // ---------- PDF-перегляд і завантаження ----------
 function openPDF(fileId) {
-  const viewer = document.getElementById("pdf-viewer");
+  const modal = document.getElementById("pdfModal");
+  const viewer = document.getElementById("pdfViewer");
 
-  // Формуємо Google Drive preview URL
-  const url = `https://drive.google.com/file/d/${fileId}/preview`;
+  // Google Drive Preview URL
+  viewer.src = `https://drive.google.com/file/d/${fileId}/preview`;
 
-  // Вставляємо iframe у div
-  viewer.innerHTML = `<iframe src="${url}" width="100%" height="600px" style="border:none;"></iframe>`;
+  // Показати модальне вікно
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closePDF() {
+  const modal = document.getElementById("pdfModal");
+  const viewer = document.getElementById("pdfViewer");
+
+  // Сховати модальне вікно
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+
+  // Очищення src, щоб зупинити PDF
+  viewer.src = "";
 }
 
 function downloadPDF(fileId, title) {
