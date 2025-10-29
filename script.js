@@ -109,13 +109,20 @@ searchInput.addEventListener("input", (e) => {
 });
 
 // ---------- PDF-перегляд і завантаження ----------
-function openPDF(url) {
-  window.open(url, "_blank");
+function openPDF(fileId) {
+  const viewer = document.getElementById("pdf-viewer");
+
+  // Формуємо Google Drive preview URL
+  const url = `https://drive.google.com/file/d/${fileId}/preview`;
+
+  // Вставляємо iframe у div
+  viewer.innerHTML = `<iframe src="${url}" width="100%" height="600px" style="border:none;"></iframe>`;
 }
-function downloadPDF(url, title) {
+
+function downloadPDF(fileId, title) {
   const filename = title.replace(/[^\w\s]/gi, "_") + ".pdf";
   const link = document.createElement("a");
-  link.href = url;
+  link.href = `https://drive.google.com/uc?export=download&id=${fileId}`;
   link.download = filename;
   document.body.appendChild(link);
   link.click();
