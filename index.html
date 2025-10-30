@@ -30,14 +30,17 @@
            type="text"
            placeholder="🔍 Пошук за автором чи назвою..."
            class="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-    <!-- 🔹 Фільтри (спойлер для мобільних) -->
+    <!-- 🔹 Фільтри -->
     <div class="p-4">
+      <!-- Кнопка спойлера для мобільних -->
       <button id="toggleFiltersBtn"
-              class="sm:hidden w-full bg-blue-500 text-white px-4 py-2 rounded-lg mb-2 text-left">
-        Фільтри ▼
+              class="sm:hidden w-full bg-blue-500 text-white px-4 py-2 rounded-lg mb-2 text-left flex justify-between items-center">
+        Фільтри 
+        <span id="toggleArrow">▼</span>
       </button>
     
-      <div id="filtersContainer" class="hidden sm:block">
+      <!-- Контейнер фільтрів -->
+      <div id="filtersContainer" class="max-h-0 overflow-hidden transition-all duration-300 sm:max-h-none sm:block">
         <!-- Кнопки категорій -->
         <div id="categoryButtons" class="flex flex-wrap gap-2 mb-2"></div>
         <!-- Алфавітний покажчик -->
