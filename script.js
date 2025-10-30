@@ -7,6 +7,24 @@ const BOOKS_PER_PAGE = 10;
 const container = document.getElementById("booksContainer");
 const searchInput = document.getElementById("search");
 const pagination = document.getElementById("pagination");
+const toggleBtn = document.getElementById("toggleFiltersBtn");
+const filtersContainer = document.getElementById("filtersContainer");
+const toggleArrow = document.getElementById("toggleArrow");
+
+toggleBtn.addEventListener("click", () => {
+  if (filtersContainer.classList.contains("max-h-0")) {
+    // Відкриваємо
+    filtersContainer.style.maxHeight = filtersContainer.scrollHeight + "px";
+    filtersContainer.classList.remove("max-h-0");
+    toggleArrow.textContent = "▲";
+  } else {
+    // Закриваємо
+    filtersContainer.style.maxHeight = "0";
+    filtersContainer.classList.add("max-h-0");
+    toggleArrow.textContent = "▼";
+  }
+});
+
 
 let books = [];
 let filteredBooks = [];
