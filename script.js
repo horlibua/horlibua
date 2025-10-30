@@ -48,6 +48,18 @@ async function loadBooks() {
   }
 }
 
+// ---------- Автоматичне відкриття модалки при завантаженні при посиланні на книжку ----------
+loadBooks().then(() => {
+  const bookId = getQueryParam("bookId");
+  if (bookId) {
+    const book = books.find(b => b.file === bookId);
+    if (book) {
+      openBookModal(book);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+});
+
 // ---------- Кнопки категорій ----------
 function renderCategoryButtons() {
   const container = document.getElementById("categoryButtons");
@@ -168,6 +180,7 @@ function renderBooks() {
                 class="text-green-600 dark:text-green-400 text-sm">⬇️ Завантажити</button>
       </div>
     `;
+    card.querySelector("img").addEventListener("click", () => openBookModal(book));
     container.appendChild(card);
   });
 }
@@ -252,6 +265,53 @@ function downloadPDF(fileId, title) {
   link.click();
   link.remove();
 }
+
+// ---------- Відкриття модалки при кліку на обкладинку ----------
+function openBookModal(book) {
+  const modal = document.getElementById("bookModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  // Заповнюємо дані
+  document.getElementById("modalCover").src = book.cover || "assets/default_cover.png";
+  document.getElementById("modalTitle").textContent = book.title;
+  document.getElementById("modalSize").textContent = book.size_mb ? book.size_mb + " МБ" : "";
+
+  // Коротке посилання
+  const shortUrlEl = document.getElementById("modalShortUrl");
+  shortUrlEl.textContent = book.short_url || "";
+  shortUrlEl.onclick = () => window.open(book.short_url, "_blank");
+
+  // Посилання на картку
+  const pageUrl = `${window.location.origin}${window.location.pathname}?bookId=${encodeURIComponent(book.file)}`;
+  const pageUrlEl = document.getElementById("modalPageUrl");
+  pageUrlEl.textContent = pageUrl;
+
+  // Кнопки Переглянути та Завантажити
+  document.getElementById("modalViewBtn").onclick = () => openPDF(book.file);
+  document.getElementById("modalDownloadBtn").onclick = () => downloadPDF(book.file, book.title);
+}
+
+function closeBookModal() {
+  const modal = document.getElementById("bookModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+// ---------- Функція копіювання в буфер ----------
+function copyToClipboard(elementId) {
+  const text = document.getElementById(elementId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Скопійовано в буфер обміну!");
+  });
+}
+
+// ---------- Функція для отримання параметра з URL ----------
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
 
 // ---------- Старт ----------
 loadBooks();
