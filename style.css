@@ -1,3 +1,4 @@
+/* Горизонтальний скрол для мобільних */
 #alphabetButtons::-webkit-scrollbar {
   height: 6px;
 }
@@ -5,4 +6,6 @@
   background-color: rgba(100,100,100,0.3);
   border-radius: 3px;
 }
-
+#alphabetButtons {
+  scroll-behavior: smooth;
+}
