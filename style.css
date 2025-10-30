@@ -9,3 +9,27 @@
 #alphabetButtons {
   scroll-behavior: smooth;
 }
+/* Плавний скрол для тексту */
+#bookModal .truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Вертикальний скрол при переповненні */
+#bookModal .overflow-y-auto {
+  max-height: 90vh;
+}
+
+/* Горизонтальний скрол для коротких посилань при потребі */
+#bookModal span[id$="Url"] {
+  max-width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Плавна анімація відкриття */
+#bookModal {
+  transition: opacity 0.2s ease;
+}
