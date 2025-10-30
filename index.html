@@ -63,24 +63,24 @@
       <!-- Кнопка закриття -->
       <button onclick="closeBookModal()" class="absolute top-2 right-2 text-white bg-red-600 rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-700">✕</button>
   
-      <div class="flex flex-col md:flex-row gap-6 p-6 overflow-y-auto">
-        <!-- Обкладинка -->
-        <div class="flex-shrink-0 w-full md:w-1/3">
-          <img id="modalCover" src="" alt="cover" class="w-full h-auto aspect-[3/4] object-cover rounded border border-gray-300 dark:border-gray-700">
-        </div>
-  
-        <!-- Інформація про книгу -->
-        <div class="flex-1 flex flex-col gap-3 min-w-0">
-          <h2 id="modalTitle" class="text-xl font-bold break-words"></h2>
-          <div id="modalSize" class="text-gray-500"></div>
-  
+        <div class="flex flex-col md:flex-row gap-6 p-6 overflow-y-auto">
+          <!-- Обкладинка -->
+          <div class="flex-shrink-0 w-full md:w-1/3">
+            <img id="modalCover" src="" alt="cover" class="w-full h-auto aspect-[3/4] object-cover rounded border border-gray-300 dark:border-gray-700">
+          </div>
+    
+          <!-- Інформація про книгу -->
+          <div class="flex-1 flex flex-col gap-3 min-w-0">
+            <h2 id="modalTitle" class="text-xl font-bold break-words"></h2>
+            <div id="modalSize" class="text-gray-500"></div>
+    
           <!-- Коротке посилання -->
           <div class="flex items-center gap-2 truncate">
             <span class="font-medium">Коротке посилання:</span>
             <span id="modalShortUrl" class="text-blue-600 dark:text-blue-400 underline truncate cursor-pointer" title=""></span>
             <button onclick="copyToClipboard('modalShortUrl')" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600" title="Скопіювати">📋</button>
           </div>
-  
+          
           <!-- Посилання на картку -->
           <div class="flex items-center gap-2 truncate">
             <span class="font-medium">Посилання на картку:</span>
@@ -93,7 +93,7 @@
             <span class="font-medium">Категорії:</span>
             <span id="modalKeywords" class="text-gray-700 dark:text-gray-300 truncate" title=""></span>
           </div>
-
+  
           <!-- Кнопки Переглянути і Завантажити -->
           <div class="flex gap-2 mt-auto flex-wrap">
             <button id="modalViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm flex-1">📖 Переглянути</button>
