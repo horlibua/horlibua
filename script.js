@@ -21,6 +21,7 @@ async function loadBooks() {
     renderBooks();
     renderPagination();
     renderCategoryButtons();
+    renderAlphabetButtons();
   } catch (err) {
     console.error("Помилка завантаження books.json:", err);
     container.innerHTML = `<p class="text-center text-red-500">Не вдалося завантажити бібліотеку.</p>`;
@@ -48,6 +49,34 @@ function renderCategoryButtons() {
   });
 }
 
+// ---------- Алфавітний покажчик ----------
+function renderAlphabetButtons() {
+  const container = document.getElementById("alphabetButtons");
+  container.innerHTML = "";
+
+  // Збираємо перші літери усіх title (з великої літери)
+  const allLetters = books.map(b => b.title[0].toUpperCase());
+  const uniqueLetters = [...new Set(allLetters)].sort();
+
+  uniqueLetters.forEach((letter) => {
+    const btn = document.createElement("button");
+    btn.innerText = letter;
+    btn.className = "px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm";
+    btn.onclick = () => {
+      // Фільтруємо книги по першій літері title
+      filteredBooks = books.filter(b => b.title[0].toUpperCase() === letter);
+      currentPage = 1;
+      renderBooks();
+      renderPagination();
+
+      // Очистимо пошук
+      searchInput.value = "";
+    };
+    container.appendChild(btn);
+  });
+}
+
+// ---------- Формування картки ----------
 function renderBooks() {
   container.innerHTML = "";
   const start = (currentPage - 1) * BOOKS_PER_PAGE;
