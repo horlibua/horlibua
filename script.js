@@ -46,8 +46,11 @@ function renderCategoryButtons() {
     btn.onclick = () => {
       activeCategory = kw;  // встановлюємо активну категорію
       activeLetter = null;  // скидаємо алфавітний фільтр
-      searchInput.value = kw;
-      searchInput.dispatchEvent(new Event("input"));
+      searchInput.value = ""; // скидаємо текст пошуку
+      filteredBooks = books.filter(b => Array.isArray(b.keywords) && b.keywords.includes(kw));
+      currentPage = 1;
+      renderBooks();
+      renderPagination();
       renderCategoryButtons();
       renderAlphabetButtons();
     };
@@ -57,46 +60,59 @@ function renderCategoryButtons() {
 
 function getCategoryButtonClass(kw) {
   return "px-3 py-1 rounded-full text-sm " +
-         (activeCategory === kw 
-           ? "bg-blue-500 text-white" 
+         (activeCategory === kw
+           ? "bg-blue-500 text-white"
            : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600");
 }
-
 
 // ---------- Алфавітний покажчик ----------
 function renderAlphabetButtons() {
   const container = document.getElementById("alphabetButtons");
   container.innerHTML = "";
 
+  // Збираємо перші літери усіх title (з великої літери)
   const allLetters = books.map(b => b.title[0].toUpperCase());
-  const uniqueLetters = [...new Set(allLetters)].sort();
+  const uniqueLetters = [...new Set(allLetters)];
 
-  uniqueLetters.forEach((letter) => {
+  // Сортування літер за українським алфавітом
+  const lettersSorted = uniqueLetters.sort((a, b) => a.localeCompare(b, 'uk'));
+
+  // Всі літери від А до Я для повного покажчика
+  const fullAlphabet = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ".split("");
+
+  fullAlphabet.forEach((letter) => {
     const btn = document.createElement("button");
     btn.innerText = letter;
-    btn.className = getAlphabetButtonClass(letter);
 
-    btn.onclick = () => {
-      activeLetter = letter;   // встановлюємо активну літеру
-      activeCategory = null;   // скидаємо категорію
-      filteredBooks = books.filter(b => b.title[0].toUpperCase() === letter);
-      currentPage = 1;
-      renderBooks();
-      renderPagination();
-      searchInput.value = "";
-      renderCategoryButtons();
-      renderAlphabetButtons();
-    };
+    // Перевірка, чи є книги з цією літерою
+    const hasBooks = allLetters.includes(letter);
+
+    btn.className = "px-3 py-1 rounded-full text-sm " +
+      (activeLetter === letter
+        ? "bg-blue-500 text-white"
+        : hasBooks
+          ? "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+          : "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed");
+
+    // Додаємо клік тільки якщо є книги
+    if (hasBooks) {
+      btn.onclick = () => {
+        activeLetter = letter;
+        activeCategory = null;
+        searchInput.value = "";
+        filteredBooks = books.filter(b => b.title[0].toUpperCase() === letter);
+        currentPage = 1;
+        renderBooks();
+        renderPagination();
+        renderCategoryButtons();
+        renderAlphabetButtons();
+      };
+    }
+
     container.appendChild(btn);
   });
 }
 
-function getAlphabetButtonClass(letter) {
-  return "px-3 py-1 rounded-full text-sm " +
-         (activeLetter === letter
-           ? "bg-blue-500 text-white"
-           : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600");
-}
 
 // ---------- Формування картки ----------
 function renderBooks() {
