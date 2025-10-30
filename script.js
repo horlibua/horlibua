@@ -301,10 +301,10 @@ function closeBookModal() {
 // ---------- Функція копіювання в буфер ----------
 function copyToClipboard(elementId) {
   const text = document.getElementById(elementId).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Скопійовано в буфер обміну!");
-  });
+  navigator.clipboard.writeText(text);
+  // без alert
 }
+
 
 // ---------- Функція для отримання параметра з URL ----------
 function getQueryParam(param) {
