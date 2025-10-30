@@ -20,10 +20,32 @@ async function loadBooks() {
     filteredBooks = [...books].reverse();
     renderBooks();
     renderPagination();
+    renderCategoryButtons();
   } catch (err) {
     console.error("Помилка завантаження books.json:", err);
     container.innerHTML = `<p class="text-center text-red-500">Не вдалося завантажити бібліотеку.</p>`;
   }
+}
+
+// ---------- Кнопки категорій ----------
+function renderCategoryButtons() {
+  const container = document.getElementById("categoryButtons");
+  container.innerHTML = "";
+
+  // Збираємо унікальні keywords
+  const allKeywords = books.flatMap(b => b.keywords || []);
+  const uniqueKeywords = [...new Set(allKeywords)];
+
+  uniqueKeywords.forEach((kw) => {
+    const btn = document.createElement("button");
+    btn.innerText = kw;
+    btn.className = "px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm";
+    btn.onclick = () => {
+      searchInput.value = kw;      // встановлюємо значення в пошук
+      searchInput.dispatchEvent(new Event("input")); // тригеримо фільтр
+    };
+    container.appendChild(btn);
+  });
 }
 
 function renderBooks() {
