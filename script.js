@@ -89,7 +89,13 @@ function renderPagination() {
 // ---------- Пошук ----------
 searchInput.addEventListener("input", (e) => {
   const q = e.target.value.toLowerCase();
-  filteredBooks = books.filter((b) => b.title.toLowerCase().includes(q));
+  filteredBooks = books.filter((b) => {
+    const inTitle = b.title.toLowerCase().includes(q);
+    const inKeywords =
+      Array.isArray(b.keywords) &&
+      b.keywords.some((kw) => kw.toLowerCase().includes(q));
+    return inTitle || inKeywords;
+  });
   currentPage = 1;
   renderBooks();
   renderPagination();
