@@ -11,6 +11,8 @@ const pagination = document.getElementById("pagination");
 let books = [];
 let filteredBooks = [];
 let currentPage = 1;
+let activeCategory = null;
+let activeLetter = null;
 
 // ---------- Завантаження books.json ----------
 async function loadBooks() {
@@ -33,47 +35,67 @@ function renderCategoryButtons() {
   const container = document.getElementById("categoryButtons");
   container.innerHTML = "";
 
-  // Збираємо унікальні keywords
   const allKeywords = books.flatMap(b => b.keywords || []);
   const uniqueKeywords = [...new Set(allKeywords)];
 
   uniqueKeywords.forEach((kw) => {
     const btn = document.createElement("button");
     btn.innerText = kw;
-    btn.className = "px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm";
+    btn.className = getCategoryButtonClass(kw);
+
     btn.onclick = () => {
-      searchInput.value = kw;      // встановлюємо значення в пошук
-      searchInput.dispatchEvent(new Event("input")); // тригеримо фільтр
+      activeCategory = kw;  // встановлюємо активну категорію
+      activeLetter = null;  // скидаємо алфавітний фільтр
+      searchInput.value = kw;
+      searchInput.dispatchEvent(new Event("input"));
+      renderCategoryButtons();
+      renderAlphabetButtons();
     };
     container.appendChild(btn);
   });
 }
+
+function getCategoryButtonClass(kw) {
+  return "px-3 py-1 rounded-full text-sm " +
+         (activeCategory === kw 
+           ? "bg-blue-500 text-white" 
+           : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600");
+}
+
 
 // ---------- Алфавітний покажчик ----------
 function renderAlphabetButtons() {
   const container = document.getElementById("alphabetButtons");
   container.innerHTML = "";
 
-  // Збираємо перші літери усіх title (з великої літери)
   const allLetters = books.map(b => b.title[0].toUpperCase());
   const uniqueLetters = [...new Set(allLetters)].sort();
 
   uniqueLetters.forEach((letter) => {
     const btn = document.createElement("button");
     btn.innerText = letter;
-    btn.className = "px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm";
+    btn.className = getAlphabetButtonClass(letter);
+
     btn.onclick = () => {
-      // Фільтруємо книги по першій літері title
+      activeLetter = letter;   // встановлюємо активну літеру
+      activeCategory = null;   // скидаємо категорію
       filteredBooks = books.filter(b => b.title[0].toUpperCase() === letter);
       currentPage = 1;
       renderBooks();
       renderPagination();
-
-      // Очистимо пошук
       searchInput.value = "";
+      renderCategoryButtons();
+      renderAlphabetButtons();
     };
     container.appendChild(btn);
   });
+}
+
+function getAlphabetButtonClass(letter) {
+  return "px-3 py-1 rounded-full text-sm " +
+         (activeLetter === letter
+           ? "bg-blue-500 text-white"
+           : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600");
 }
 
 // ---------- Формування картки ----------
@@ -147,9 +169,17 @@ searchInput.addEventListener("input", (e) => {
       b.keywords.some((kw) => kw.toLowerCase().includes(q));
     return inTitle || inKeywords;
   });
+
   currentPage = 1;
   renderBooks();
   renderPagination();
+
+  // скидаємо підсвічування кнопок, якщо пошук введено вручну
+  if (!activeCategory && !activeLetter) return;
+  activeCategory = null;
+  activeLetter = null;
+  renderCategoryButtons();
+  renderAlphabetButtons();
 });
 
 // ---------- PDF-перегляд і завантаження ----------
