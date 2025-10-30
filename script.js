@@ -70,31 +70,24 @@ function renderAlphabetButtons() {
   const container = document.getElementById("alphabetButtons");
   container.innerHTML = "";
 
-  // Збираємо перші літери усіх title (з великої літери)
   const allLetters = books.map(b => b.title[0].toUpperCase());
   const uniqueLetters = [...new Set(allLetters)];
 
-  // Сортування літер за українським алфавітом
-  const lettersSorted = uniqueLetters.sort((a, b) => a.localeCompare(b, 'uk'));
-
-  // Всі літери від А до Я для повного покажчика
   const fullAlphabet = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ".split("");
 
   fullAlphabet.forEach((letter) => {
     const btn = document.createElement("button");
     btn.innerText = letter;
 
-    // Перевірка, чи є книги з цією літерою
     const hasBooks = allLetters.includes(letter);
 
-    btn.className = "px-3 py-1 rounded-full text-sm " +
+    btn.className = "px-2 py-1 rounded-full text-sm flex-shrink-0 " +  // flex-shrink-0 щоб кнопки не стискалися
       (activeLetter === letter
         ? "bg-blue-500 text-white"
         : hasBooks
           ? "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
           : "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed");
 
-    // Додаємо клік тільки якщо є книги
     if (hasBooks) {
       btn.onclick = () => {
         activeLetter = letter;
@@ -112,6 +105,7 @@ function renderAlphabetButtons() {
     container.appendChild(btn);
   });
 }
+
 
 
 // ---------- Формування картки ----------
