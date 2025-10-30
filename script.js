@@ -280,12 +280,24 @@ function openBookModal(book) {
   // Коротке посилання
   const shortUrlEl = document.getElementById("modalShortUrl");
   shortUrlEl.textContent = book.short_url || "";
+  shortUrlEl.title = book.short_url || "";
   shortUrlEl.onclick = () => window.open(book.short_url, "_blank");
-
+  
   // Посилання на картку
   const pageUrl = `${window.location.origin}${window.location.pathname}?bookId=${encodeURIComponent(book.file)}`;
   const pageUrlEl = document.getElementById("modalPageUrl");
   pageUrlEl.textContent = pageUrl;
+  pageUrlEl.title = pageUrl;
+
+  // Категорії
+  const keywordsEl = document.getElementById("modalKeywords");
+  if (Array.isArray(book.keywords) && book.keywords.length) {
+    keywordsEl.textContent = book.keywords.join(", ");
+    keywordsEl.title = book.keywords.join(", ");
+  } else {
+    keywordsEl.textContent = "-";
+    keywordsEl.title = "";
+  }
 
   // Кнопки Переглянути та Завантажити
   document.getElementById("modalViewBtn").onclick = () => openPDF(book.file);
