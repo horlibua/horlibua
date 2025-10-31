@@ -4,12 +4,15 @@
 
 🌍 [Відкрити онлайн → https://horlibua.github.io/](https://horlibua.github.io/)
 
-<h3 align="center">📸 Інтерфейс бібліотеки</h3>
+---
 
-<p align="center">
-  <img src="assets/screenshot1.jpg" width="45%" style="border:2px solid #333; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.3); margin:5px;">
-  <img src="assets/screenshot2.jpg" width="45%" style="border:2px solid #333; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.3); margin:5px;">
-</p>
+## 📸 Інтерфейс бібліотеки
+<table><tr><td>
+  <img src="assets/screenshot1.jpg" >
+  </td>
+  <td>
+  <img src="assets/screenshot2.jpg" >
+</td></tr></table>
 
 ---
 
