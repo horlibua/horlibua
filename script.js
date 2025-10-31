@@ -322,8 +322,16 @@ function copyToClipboard(elementId) {
 function showToast(message) {
   const toast = document.createElement("div");
   toast.textContent = message;
-  toast.className =
-    "fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white text-center px-6 py-3 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50 w-[80%] max-w-sm";
+
+  // Визначаємо тему (dark/light)
+  const isDark = document.documentElement.classList.contains("dark");
+
+  toast.className = `
+    fixed bottom-6 left-1/2 -translate-x-1/2
+    ${isDark ? "bg-green-700 text-white" : "bg-green-600 text-white"}
+    text-center px-6 py-3 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50
+    w-[90%] sm:w-auto sm:max-w-sm
+  `;
 
   document.body.appendChild(toast);
 
@@ -336,6 +344,7 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 300);
   }, 2000);
 }
+
 
 
 // ---------- Функція для отримання параметра з URL ----------
