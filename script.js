@@ -320,15 +320,14 @@ function copyToClipboard(elementId) {
 
 // ---------- Повідомлення (toast) ----------
 function showToast(message) {
-  // Створюємо елемент
   const toast = document.createElement("div");
   toast.textContent = message;
   toast.className =
-    "fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50";
+    "fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white text-center px-6 py-3 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50 w-[80%] max-w-sm";
 
   document.body.appendChild(toast);
 
-  // Анімація появи
+  // Плавна поява
   setTimeout(() => (toast.style.opacity = "1"), 50);
 
   // Зникнення через 2 секунди
