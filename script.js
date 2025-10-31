@@ -330,7 +330,7 @@ function showToast(message) {
     fixed bottom-6 left-1/2 -translate-x-1/2
     ${isDark ? "bg-green-700 text-white" : "bg-green-600 text-white"}
     text-center text-sm px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50
-    w-[90%] sm:w-auto sm:max-w-sm
+    w-[80%] sm:w-auto sm:max-w-sm
   `;
 
   document.body.appendChild(toast);
