@@ -322,6 +322,19 @@ if (Array.isArray(book.keywords) && book.keywords.length) {
 
       // Скролимо догори
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Якщо мобільна версія — відкриваємо блок фільтрів
+      if (window.innerWidth < 640) { // sm breakpoint
+        const filtersContainer = document.getElementById("filtersContainer");
+        const toggleArrow = document.getElementById("toggleArrow");
+      
+        if (filtersContainer && filtersContainer.classList.contains("max-h-0")) {
+          filtersContainer.style.maxHeight = filtersContainer.scrollHeight + "px";
+          filtersContainer.classList.remove("max-h-0");
+          if (toggleArrow) toggleArrow.textContent = "▲";
+        }
+      }
+      
     };
 
     keywordsEl.appendChild(btn);
