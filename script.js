@@ -329,9 +329,12 @@ if (Array.isArray(book.keywords) && book.keywords.length) {
         const toggleArrow = document.getElementById("toggleArrow");
       
         if (filtersContainer && filtersContainer.classList.contains("max-h-0")) {
-          filtersContainer.style.maxHeight = filtersContainer.scrollHeight + "px";
-          filtersContainer.classList.remove("max-h-0");
-          if (toggleArrow) toggleArrow.textContent = "▲";
+          // Трохи затримки, щоб розрахувався scrollHeight
+          setTimeout(() => {
+            filtersContainer.style.maxHeight = filtersContainer.scrollHeight + 200 + "px"; // запас по висоті
+            filtersContainer.classList.remove("max-h-0");
+            if (toggleArrow) toggleArrow.textContent = "▲";
+          }, 100);
         }
       }
       
@@ -388,7 +391,25 @@ function showToast(message) {
   }, 2000);
 }
 
+// ---------- Функція для відображення фільтрів при розкритті вікна ----------
+window.addEventListener("resize", () => {
+  const filtersContainer = document.getElementById("filtersContainer");
+  const toggleArrow = document.getElementById("toggleArrow");
 
+  if (!filtersContainer) return;
+
+  if (window.innerWidth >= 640) {
+    // 🖥️ На десктопі завжди відкрито
+    filtersContainer.style.maxHeight = "none";
+    filtersContainer.classList.remove("max-h-0");
+    if (toggleArrow) toggleArrow.textContent = "▲";
+  } else {
+    // 📱 На мобільному — якщо не відкрито, залишаємо схованим
+    if (!filtersContainer.classList.contains("max-h-0")) {
+      filtersContainer.style.maxHeight = filtersContainer.scrollHeight + "px";
+    }
+  }
+});
 
 // ---------- Функція для отримання параметра з URL ----------
 function getQueryParam(param) {
