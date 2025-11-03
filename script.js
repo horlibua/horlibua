@@ -321,7 +321,7 @@ if (Array.isArray(book.keywords) && book.keywords.length) {
       renderAlphabetButtons();
 
       // Скролимо догори
-      window.scrollTo({ top: 300, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     keywordsEl.appendChild(btn);
