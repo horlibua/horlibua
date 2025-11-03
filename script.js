@@ -290,14 +290,45 @@ function openBookModal(book) {
   pageUrlEl.title = pageUrl;
 
   // Категорії
-  const keywordsEl = document.getElementById("modalKeywords");
-  if (Array.isArray(book.keywords) && book.keywords.length) {
-    keywordsEl.textContent = book.keywords.join(", ");
-    keywordsEl.title = book.keywords.join(", ");
-  } else {
-    keywordsEl.textContent = "-";
-    keywordsEl.title = "";
-  }
+const keywordsEl = document.getElementById("modalKeywords");
+keywordsEl.innerHTML = ""; // очищаємо попередній вміст
+
+if (Array.isArray(book.keywords) && book.keywords.length) {
+  book.keywords.forEach((kw) => {
+    const btn = document.createElement("button");
+    btn.innerText = kw;
+    btn.className =
+      "px-3 py-1 rounded-full text-sm m-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition";
+
+    btn.onclick = () => {
+      // Закриваємо модальне вікно
+      closeBookModal();
+
+      // Активуємо цю категорію у фільтрі
+      activeCategory = kw;
+      activeLetter = null;
+      searchInput.value = "";
+
+      // Фільтруємо книги
+      filteredBooks = books.filter(
+        (b) => Array.isArray(b.keywords) && b.keywords.includes(kw)
+      );
+
+      currentPage = 1;
+      renderBooks();
+      renderPagination();
+      renderCategoryButtons();
+      renderAlphabetButtons();
+
+      // Скролимо догори
+      window.scrollTo({ top: 300, behavior: "smooth" });
+    };
+
+    keywordsEl.appendChild(btn);
+  });
+} else {
+  keywordsEl.textContent = "-";
+}
 
   // Кнопки Переглянути та Завантажити
   document.getElementById("modalViewBtn").onclick = () => openPDF(book.file);
