@@ -80,7 +80,7 @@ function renderCategoryButtons() {
       activeCategory = kw;
       activeLetter = null;
       searchInput.value = "";
-      filteredBooks = books.filter(b => Array.isArray(b.keywords) && b.keywords.includes(kw));
+      filteredBooks = books.filter(b => Array.isArray(b.keywords) && b.keywords.includes(kw)).reverse();
       currentPage = 1;
       renderBooks();
       renderPagination();
@@ -121,7 +121,7 @@ function renderAlphabetButtons() {
       activeLetter = letter;
       activeCategory = null;
       searchInput.value = "";
-      filteredBooks = books.filter(b => b.title[0].toUpperCase() === letter);
+      filteredBooks = books.filter(b => b.title[0].toUpperCase() === letter).reverse();
       currentPage = 1;
       renderBooks();
       renderPagination();
@@ -217,7 +217,7 @@ searchInput.addEventListener("input", (e) => {
       Array.isArray(b.keywords) &&
       b.keywords.some((kw) => kw.toLowerCase().includes(q));
     return inTitle || inKeywords;
-  });
+  }).reverse();
 
   currentPage = 1;
   renderBooks();
@@ -312,7 +312,7 @@ if (Array.isArray(book.keywords) && book.keywords.length) {
       // Фільтруємо книги
       filteredBooks = books.filter(
         (b) => Array.isArray(b.keywords) && b.keywords.includes(kw)
-      );
+      ).reverse();
 
       currentPage = 1;
       renderBooks();
