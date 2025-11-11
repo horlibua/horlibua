@@ -68,6 +68,25 @@ function renderCategoryButtons() {
   const allKeywords = books.flatMap(b => b.keywords || []);
   const uniqueKeywords = [...new Set(allKeywords)];
 
+  // 🔹 Сортування: літери спочатку (алфавітно), потім числа (за зростанням)
+  uniqueKeywords.sort((a, b) => {
+    const isNumA = /^\d/.test(a);
+    const isNumB = /^\d/.test(b);
+
+    if (isNumA && !isNumB) return 1;   // числа після літер
+    if (!isNumA && isNumB) return -1;  // літери перед числами
+
+    // якщо обидва числа — порівнюємо як числа
+    if (isNumA && isNumB) {
+      const numA = parseFloat(a);
+      const numB = parseFloat(b);
+      return numA - numB;
+    }
+
+    // інакше — звичайне алфавітне порівняння
+    return a.localeCompare(b, 'uk', { sensitivity: 'base' });
+  });
+
   uniqueKeywords.forEach((kw) => {
     const btn = document.createElement("button");
     btn.innerText = kw;
@@ -80,7 +99,9 @@ function renderCategoryButtons() {
       activeCategory = kw;
       activeLetter = null;
       searchInput.value = "";
-      filteredBooks = books.filter(b => Array.isArray(b.keywords) && b.keywords.includes(kw)).reverse();
+      filteredBooks = books
+        .filter(b => Array.isArray(b.keywords) && b.keywords.includes(kw))
+        .reverse();
       currentPage = 1;
       renderBooks();
       renderPagination();
@@ -91,7 +112,7 @@ function renderCategoryButtons() {
     container.appendChild(btn);
   });
 
-  // Кнопка скидання фільтрів (єдина)
+  // 🔹 Кнопка скидання фільтрів
   const resetBtn = document.createElement("button");
   resetBtn.innerText = "❌ Скинути фільтри";
   resetBtn.className = "px-3 py-1 rounded-full text-sm bg-red-500 text-white hover:bg-red-600";
